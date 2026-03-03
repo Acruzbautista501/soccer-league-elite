@@ -1,0 +1,41 @@
+import { library } from "@fortawesome/fontawesome-svg-core";
+
+/* Importa los iconos que quieras usar */
+import {
+  faTachographDigital,
+  faTrophy,
+  faUsers,
+  faFutbol,
+  faChartSimple,
+  faGear,
+  faMoon,
+  faSun,
+  faSquarePlus,
+  faFileCirclePlus,
+  faPlus,
+  faPenToSquare,
+  faCalendarDays,
+  faFileCsv,
+  faLocationDot,
+  faPeopleGroup,
+} from '@fortawesome/free-solid-svg-icons'
+
+/* Agrégalos a la librería */
+library.add(
+  faTachographDigital,
+  faTrophy,
+  faUsers,
+  faFutbol,
+  faChartSimple,
+  faGear,
+  faMoon,
+  faSun,
+  faSquarePlus,
+  faFileCirclePlus,
+  faPlus,
+  faPenToSquare,
+  faCalendarDays,
+  faFileCsv,
+  faLocationDot,
+  faPeopleGroup,
+)

@@ -1,35 +1,30 @@
 <script setup lang="ts">
 import { useLayout } from '@/composables/useLayout'
+import AppSidebarNav from '@/components/layout/AppSidebarNav.vue'
 
-const { sidebarOpen } = useLayout()
+const { sidebarOpen, closeSidebar } = useLayout()
 </script>
 
 <template>
+  <!-- Overlay móvil -->
+  <div
+    v-if="sidebarOpen"
+    class="fixed inset-0 z-30 bg-black/50 lg:hidden"
+    @click="closeSidebar"
+  />
+
+  <!-- Sidebar -->
   <aside
-    class="bg-gray-900 text-white h-screen transition-all duration-300"
-    :class="sidebarOpen ? 'w-64' : 'w-0 overflow-hidden'"
+    class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform my-5"
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
   >
-    <div v-if="sidebarOpen" class="p-4 space-y-4">
-
-      <h2 class="text-xl font-bold">Liga Fútbol</h2>
-
-      <nav class="space-y-2">
-        <RouterLink to="/dashboard" class="block hover:bg-gray-700 p-2 rounded">
-          Dashboard
-        </RouterLink>
-
-        <RouterLink to="/teams" class="block hover:bg-gray-700 p-2 rounded">
-          Equipos
-        </RouterLink>
-
-        <RouterLink to="/matches" class="block hover:bg-gray-700 p-2 rounded">
-          Partidos
-        </RouterLink>
-
-        <RouterLink to="/stats" class="block hover:bg-gray-700 p-2 rounded">
-          Estadísticas
-        </RouterLink>
-      </nav>
+    <div class="h-full px-3 py-5 overflow-y-auto bg-neutral-primary-soft dark:bg-gray-800 border-e border-default dark:border-gray-700">
+      <!-- Logo -->
+      <div class="flex items-center ps-2.5 mb-5">
+        <img src="/img/logo-liga.png" class="h-6 me-3" />
+      </div>
+      <!-- NAV -->
+      <AppSidebarNav />
 
     </div>
   </aside>

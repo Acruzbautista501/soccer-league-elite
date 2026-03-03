@@ -15,17 +15,42 @@ const router = createRouter({
         },
         {
           path: 'dashboard',
-          name: 'dashboard',
+          name: 'Dashboard',
           component: DashboardView
         },
-        // {
-        //   path: 'about',
-        //   name: 'about',
-        //   component: () => import('@/views/AboutView.vue')
-        // }
+
+        // 👇 RUTA PADRE
+        {
+          path: 'teams',
+          component: () => import('@/views/teams/TeamsLayout.vue'),
+          children: [
+            {
+              path: '',
+              name: 'Equipos',
+              component: () => import('@/views/teams/TeamsList.vue')
+            },
+            {
+              path: 'create',
+              name: 'CrearEquipo',
+              component: () => import('@/views/teams/TeamsCreate.vue')
+            },
+            // {
+            //   path: ':id',
+            //   name: 'DetalleEquipo',
+            //   component: () => import('@/views/teams/TeamsDetail.vue'),
+            //   props: true
+            // },
+            // {
+            //   path: ':id/edit',
+            //   name: 'EditarEquipo',
+            //   component: () => import('@/views/teams/TeamsEdit.vue'),
+            //   props: true
+            // }
+          ]
+        }
       ]
     }
-  ],
+  ]
 })
 
 export default router

@@ -1,10 +1,17 @@
 @import "tailwindcss";
 
-/* 1. Importar el tema de Flowbite */
+/* Flowbite */
 @import "flowbite/src/themes/default";
-
-/* 2. Activar el plugin de Flowbite */
 @plugin "flowbite/plugin";
-
-/* 3. Indicarle a Tailwind dónde buscar las clases de Flowbite */
 @source "../node_modules/flowbite";
+
+/* Activar dark mode basado en clase (Tailwind v4 way) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*Datatables styles */
+@import "simple-datatables/dist/style.css";
+
+#app {
+  font-family: "Montserrat", sans-serif;
+}
+
