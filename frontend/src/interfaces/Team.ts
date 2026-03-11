@@ -20,4 +20,23 @@ export interface UpdateTeam extends CreateTeam {
   _id: string
 } 
 
+export interface Player {
+  _id?: string
+  fullName: string
+  number: number
+  position: string
+  isStarter: string
+  status: string
+  team: string
+  city: string
+  height: number
+  weight: number
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export interface TeamPlayersResponse {
+  team: Team
+  players: Player[]
+}
 

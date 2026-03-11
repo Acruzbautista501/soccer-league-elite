@@ -1,4 +1,4 @@
-import type { Team, CreateTeam, UpdateTeam } from "@/interfaces/Team";
+import type { Team, CreateTeam, UpdateTeam, TeamPlayersResponse, Player } from "@/interfaces/Team";
 import TeamsServices from "@/services/TeamsServices";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -23,6 +23,8 @@ export const useTeam = () => {
     delegate: "",
     status: ""
   })
+
+  const teamPlayer = ref<Player[]>([])
 
   const createTeamForm = reactive<CreateTeam>({
     name: "",
@@ -75,6 +77,25 @@ export const useTeam = () => {
       fire({
         title: 'Error',
         text: error.response?.data?.message || 'No se pudo cargar el equipo.',
+        icon: 'error'
+      })
+    }
+  }
+
+  const getPlayersTeam = async (id: string) => {
+    try {
+
+      const response = await teamService.getPlayersTeam(id)
+
+      const { team: teamData, players } = response.data.data
+
+      team.value = teamData
+      teamPlayer.value = players
+
+    } catch (error: any) {
+      fire({
+        title: 'Error',
+        text: error.response?.data?.message || 'No se pudieron cargar los jugadores del equipo.',
         icon: 'error'
       })
     }
@@ -199,10 +220,12 @@ export const useTeam = () => {
   return{
     teams,
     team,
+    teamPlayer,
     createTeamForm,
     updateTeamForm,
 
     getTeams,
+    getPlayersTeam,
     addTeam,
     getTeam,
     updateTeam,

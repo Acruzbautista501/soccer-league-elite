@@ -45,7 +45,13 @@ const router = createRouter({
               name: 'EditarEquipo',
               component: () => import('@/views/teams/TeamsEdit.vue'),
               props: true
-            }
+            },
+            {
+              path: '/team/:name/create-player',
+              name: 'AgregarJugador',
+              component: () => import('@/views/players/CreatePlayerView.vue'),
+              props: true
+            },            
           ]
         }
       ]

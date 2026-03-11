@@ -30,6 +30,8 @@ import {
   faEarthAmerica,
   faCircleArrowLeft,
   faDeleteLeft,
+  faUserPlus,
+  faCloudArrowUp
 } from '@fortawesome/free-solid-svg-icons'
 
 /* Agrégalos a la librería */
@@ -62,4 +64,6 @@ library.add(
   faEarthAmerica,
   faCircleArrowLeft,
   faDeleteLeft,
+  faUserPlus,
+  faCloudArrowUp
 )

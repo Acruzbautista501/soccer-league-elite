@@ -11,7 +11,7 @@ const emit = defineEmits<{
 <template>
   <div
     @click="emit('create', region)"
-    class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-5 flex flex-col items-center justify-center text-center hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all group mt-8"
+    class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-5 flex flex-col items-center justify-center text-center hover:border-blue-800/50 hover:bg-blue-500/5 cursor-pointer transition-all group mt-8"
   >
     <div class="size-12 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 flex items-center justify-center group-hover:bg-primary/20 group-hover:text-primary mb-3">
       <FaIcon icon="plus" class="text-2xl"/>

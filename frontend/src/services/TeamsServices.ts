@@ -1,6 +1,6 @@
 import api from "@/api/api"
 import type { ApiResponse } from "@/types/ApiResponse"
-import type { Team } from "@/interfaces/Team"
+import type { Team, TeamPlayersResponse } from "@/interfaces/Team"
 
 export default {
 
@@ -10,6 +10,10 @@ export default {
 
   getTeam(id: string) {
     return api.get<ApiResponse<Team>>(`/teams/details/${id}`)
+  },
+
+  getPlayersTeam(id: string){
+    return api.get<ApiResponse<TeamPlayersResponse>>(`/teams/${id}/players`)
   },
 
   createTeam(payload: FormData) {

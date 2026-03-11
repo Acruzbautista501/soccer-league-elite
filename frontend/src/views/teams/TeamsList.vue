@@ -60,6 +60,15 @@ const openEditTeam = (team: Team) => {
     params: { id: team._id }
   })
 }
+
+const openSquadTeam = (team: Team) => {
+  router.push({
+    name: 'PlantillaEquipo',
+    params: {
+      id: team._id,
+    }
+  })
+}
 </script>
 
 <template>
@@ -149,6 +158,7 @@ const openEditTeam = (team: Team) => {
                   :key="team._id"
                   :team="team"
                   @edit="openEditTeam"
+                  @view-roster="openSquadTeam"
                 />
 
                 <AddTeamCard
@@ -199,6 +209,7 @@ const openEditTeam = (team: Team) => {
                   :key="team._id"
                   :team="team"
                   @edit="openEditTeam"
+                  @view-roster="openSquadTeam"
                 />
 
                 <!-- CTA solo si aún hay cupo -->
