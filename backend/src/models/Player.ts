@@ -3,6 +3,11 @@ import type { IPlayer } from '../interfaces/Player.js'
 
 const playerSchema = new Schema<IPlayer>({
   fullName: { type: String, required: true },
+  isStarter: { 
+    type: String,
+    enum: [ 'Titular', 'Suplente' ],
+    required: true,
+  },
   number: { type: Number, required: true },
   position: { 
     type: String, 
@@ -15,7 +20,7 @@ const playerSchema = new Schema<IPlayer>({
     default: 'Activo' 
   },
   team: { type: Schema.Types.ObjectId, ref: 'Team', required: true },
-  municipality: { type: String },
+  city: { type: String },
   birthDate: { type: Date },
   height: { type: Number },
   weight: { type: Number }
