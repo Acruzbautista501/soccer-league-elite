@@ -3,11 +3,11 @@ import { Document, Types } from "mongoose";
 export interface IPlayer extends Document {
   fullName: string;
   photo: string;
-  isStarter: 'Titular' | 'Suplente';
+  isStarter: 'Suplente' | 'Titular';
   number: number;
   age: number;
   position: 'Portero' | 'Defensa' | 'Mediocampista' | 'Delantero';
-  status: 'Activo' | 'Lesionado' | 'Pendiente';
+  status: 'Activo' | 'Lesionado' | 'Inactivo';
   team: Types.ObjectId; // Referencia al equipo
   city: string;
   birthDate: Date;

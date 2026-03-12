@@ -3,15 +3,16 @@ import { ref } from 'vue'
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import { useTeam } from '@/composables/useTeam'
 import { useRoute, useRouter } from 'vue-router'
+import { usePlayer } from '@/composables/usePalyer'
 
 const router = useRouter()
 const route = useRoute()
 
 const teamName = route.params.name as string
+const teamId = route.params.id as string
 
-const { createTeamForm, addTeam, } = useTeam()
+const { createPlayerForm, addPlayer, } = usePlayer()
 
 const logoFile = ref<File | null>(null)
 const preview = ref<string | null>(null)
@@ -60,42 +61,94 @@ const handleLogoChange = (e: Event) => {
 
 const schema = toTypedSchema(
   z.object({
-    name: z.string().min(3, 'El nombre debe tener mínimo 3 caracteres'),
-    city: z.string().min(2, 'La ciudad o municipio es obligatorio'),
-    zone: z.string().min(1, 'Selecciona una zona'),
-    coach: z.string().min(3, 'El entrenador es obligatorio'),
-    email: z.string().email('Email inválido'),
+    fullName: z
+      .string()
+      .min(3, 'El nombre del jugador debe tener mínimo 3 caracteres.'),
+
+    age: z
+      .number({ invalid_type_error: 'La edad debe ser un número.' })
+      .min(5, 'Edad inválida')
+      .max(60, 'Edad inválida'),
+
+    birthDate: z
+      .string()
+      .min(1, 'La fecha de nacimiento es obligatoria.'),
+
+    number: z
+      .number({ invalid_type_error: 'El número debe ser numérico.' })
+      .min(1, 'Número inválido')
+      .max(99, 'Número inválido'),
+
+    position: z.enum(['Portero', 'Defensa', 'Mediocampista', 'Delantero'], {
+      required_error: 'Selecciona una posición.'
+    }),
+
+    isStarter: z.enum(['Suplente', 'Titular',], {
+      required_error: 'Selecciona si es titular o suplente'
+    }),
+
+    status: z
+      .enum(['Activo', 'Lesionado', 'Inactivo'], {
+        required_error: 'Selecciona el estado del jugador'
+    }),
+
+    city: z
+      .string()
+      .min(2, 'La ciudad es obligatoria.'),
+
+    height: z
+      .number({ invalid_type_error: 'La altura debe ser un número.' })
+      .min(1, 'Altura inválida'),
+
+    weight: z
+      .number({ invalid_type_error: 'El peso debe ser un número.' })
+      .min(1, 'Peso inválido')
   })
 )
 
 const { handleSubmit, errors, defineField } = useForm({
   validationSchema: schema,
   initialValues: {
-    name: '',
+    fullName: '',
+    age: 0,
+    birthDate: '',
+    number: 0,
+    position: 'Portero',
+    isStarter: 'Suplente',
+    status: 'Activo',
     city: '',
-    zone: '',
-    coach: '',
-    email: ''
+    height: 0,
+    weight: 0
   }
 })
 
 // campos reactivos
-const [name] = defineField('name')
+const [fullName] = defineField('fullName')
+const [age] = defineField('age')
+const [birthDate] = defineField('birthDate')
+const [number] = defineField('number')
+const [position] = defineField('position')
+const [isStarter] = defineField('isStarter')
+const [status] = defineField('status')
 const [city] = defineField('city')
-const [zone] = defineField('zone')
-const [coach] = defineField('coach')
-const [email] = defineField('email')
-
+const [height] = defineField('height')
+const [weight] = defineField('weight')
 // Agregar nuevo equipo
-const addNewTeam = handleSubmit(async (values) => {
+const addNewPlayer = handleSubmit(async (values) => {
 
-  createTeamForm.name = values.name
-  createTeamForm.city = values.city
-  createTeamForm.region = values.zone
-  createTeamForm.coach = values.coach
-  createTeamForm.contactEmail = values.email
+  createPlayerForm.fullName = values.fullName
+  createPlayerForm.age = values.age
+  createPlayerForm.birthDate = values.birthDate
+  createPlayerForm.number= values.number
+  createPlayerForm.position = values.position
+  createPlayerForm.isStarter = values.isStarter
+  createPlayerForm.status = values.status
+  createPlayerForm.team = teamId
+  createPlayerForm.city = values.city
+  createPlayerForm.height = values.height
+  createPlayerForm.weight = values.weight
 
-  await addTeam(logoFile.value)
+  await addPlayer(logoFile.value)
 })
 </script>
 
@@ -141,20 +194,16 @@ const addNewTeam = handleSubmit(async (values) => {
           </div>
         </div> -->
       </section>
-      <form id="add-player" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+      <form id="add-player" class="grid grid-cols-1 lg:grid-cols-3 gap-8" @submit.prevent="addNewPlayer">
         <!-- Photo Upload Section -->
         <div class="lg:col-span-1">
           <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
-            
             <h2 class="text-slate-900 dark:text-white text-lg font-bold mb-4">
               Foto del Jugador
             </h2>
-
             <label
               class="flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 px-4 py-10 hover:border-primary transition-colors cursor-pointer group"
             >
-
               <!-- PREVIEW -->
               <div
                 class="size-32 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors overflow-hidden relative"
@@ -164,7 +213,6 @@ const addNewTeam = handleSubmit(async (values) => {
                   :src="preview"
                   class="w-full h-full object-cover"
                 />
-
                 <!-- ESTADO VACÍO -->
                 <template v-else>
                   <FaIcon icon="fa-user" class="text-5xl"/>
@@ -173,7 +221,6 @@ const addNewTeam = handleSubmit(async (values) => {
                   ></div>
                 </template>
               </div>
-
               <div class="text-center">
                 <p class="text-slate-900 dark:text-white font-bold text-sm">
                   Subir Imagen de Perfil
@@ -182,14 +229,12 @@ const addNewTeam = handleSubmit(async (values) => {
                   Recomendado: 400x400px JPG/PNG
                 </p>
               </div>
-
               <div
                 class="w-full flex items-center justify-center gap-2 rounded-xl h-10 px-4 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
               >
                 <FaIcon icon="fa-cloud-arrow-up" class="text-lg"/>
                 Seleccionar Archivo
               </div>
-
               <!-- INPUT FILE -->
               <input
                 type="file"
@@ -197,17 +242,38 @@ const addNewTeam = handleSubmit(async (values) => {
                 accept="image/png,image/jpeg,image/jpg"
                 @change="handleLogoChange"
               />
-
             </label>
-
             <!-- ERROR -->
             <p v-if="logoError" class="text-red-500 text-sm font-semibold mt-3">
               {{ logoError }}
             </p>
-
+            <!-- Estado Activo -->
             <div class="mt-8">
               <div class="flex items-center justify-between">
-
+                <div>
+                  <p class="text-slate-900 dark:text-white font-bold text-sm">
+                    Tipo de Jugador
+                  </p>
+                  <p class="text-slate-500 text-xs">
+                    Define si el jugador es titular o suplente
+                  </p>
+                </div>
+                <label class="inline-flex items-center cursor-pointer">
+                  <span class="select-none text-sm font-medium text-heading">Suplente</span>
+                  <input
+                    type="checkbox"
+                    class="sr-only peer"
+                    :checked="isStarter === 'Titular'"
+                    @change="isStarter = ($event.target as HTMLInputElement).checked ? 'Titular' : 'Suplente'"
+                  />
+                  <div class="relative mx-3 w-9 h-5 bg-neutral-quaternary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-soft dark:peer-focus:ring-brand-soft rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand"></div>
+                  <span class="select-none text-sm font-medium text-heading">Titular</span>
+                </label>
+              </div>
+            </div>
+            <!-- Tipo de Jugador -->
+            <div class="mt-5">
+              <div class="flex flex-col gap-2">
                 <div>
                   <p class="text-slate-900 dark:text-white font-bold text-sm">
                     Estado Activo
@@ -215,69 +281,91 @@ const addNewTeam = handleSubmit(async (values) => {
                   <p class="text-slate-500 text-xs">
                     Establecer disponibilidad del jugador
                   </p>
-                </div>
+                </div>                
+                <select
+                  v-model="status"
+                  class="w-full rounded border-slate-200 dark:border-slate-700 focus:ring-blue-700 focus:border-blue-700 bg-white dark:bg-slate-800 text-sm dark:text-white"
+                >
+                  <option value="Activo">Activo</option>
+                  <option value="Lesionado">Lesionado</option>
+                  <option value="Pendiente">Pendiente</option>
+                </select>
 
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input checked class="sr-only peer" type="checkbox" />
-
-                  <div
-                    class="w-11 h-6 bg-slate-200 peer-focus:outline-none dark:bg-slate-700
-                    peer-checked:after:translate-x-full peer-checked:after:border-white
-                    after:content-[''] after:absolute after:top-[2px] after:left-[2px]
-                    after:bg-white after:border-gray-300 after:border after:rounded-full
-                    after:h-5 after:w-5 after:transition-all dark:border-gray-600
-                    peer-checked:bg-primary"
-                  ></div>
-                </label>
-
+                <p v-if="errors.status" class="text-red-500 text-sm font-semibold">
+                  {{ errors.status }}
+                </p>
               </div>
-            </div>
-
+            </div>           
           </div>
         </div>
-
         <!-- Form Details Section -->
         <div class="lg:col-span-2">
           <div class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800">
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               <!-- Full Name -->
               <div class="col-span-2">
-                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                <label
+                  class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"
+                >
                   Nombre Completo
                 </label>
-
                 <input
-                  class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
+                  v-model="fullName"
+                  class="w-full rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 dark:text-white text-sm"
                   placeholder="ej. Juan Martínez"
                   type="text"
                 />
+                <p v-if="errors.fullName" class="text-red-500 text-sm font-semibold">
+                  {{ errors.fullName }}
+                </p>
               </div>
-
+              <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                  Edad <span class=" text-slate-400">(años)</span>
+                </label>
+                <input
+                  v-model="age"
+                  class="w-full rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 dark:text-white text-sm"
+                  max="99"
+                  min="1"
+                  placeholder="7"
+                  type="number"
+                />
+                <p v-if="errors.age" class="text-red-500 text-sm font-semibold">
+                  {{ errors.age }}
+                </p>
+              </div>              
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">             
               <!-- Date of Birth -->
               <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                   Fecha de Nacimiento
                 </label>
-
                 <input
-                  class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
+                  v-model="birthDate"
                   type="date"
+                  class="w-full rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 dark:text-white text-sm"
                 />
+                <p v-if="errors.birthDate" class="text-red-500 text-sm font-semibold">
+                  {{ errors.birthDate }}
+                </p>
               </div>
-
               <!-- Nationality -->
               <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                   Ciudad o Municipio
                 </label>
-
                 <input
-                  class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
+                  v-model="city"
+                  class="w-full rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 dark:text-white text-sm"
                   placeholder="ej. Naranjos"
                   type="text"
                 />
+
+                <p v-if="errors.city" class="text-red-500 text-sm font-semibold">
+                  {{ errors.city }}
+                </p>
                 <!-- <select
                   class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
                 >
@@ -289,66 +377,73 @@ const addNewTeam = handleSubmit(async (values) => {
                   <option value="ES">España</option>
                 </select> -->
               </div>
-
               <!-- Position -->
               <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                   Posición Principal
                 </label>
-
                 <select
-                  class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
+                  v-model="position"
+                  class="w-full rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 dark:text-white text-sm"
                 >
-                  <option value="GK">Portero</option>
-                  <option value="DF">Defensa</option>
-                  <option value="MF">Centrocampista</option>
-                  <option value="FW">Delantero</option>
+                  <option value="Portero">Portero</option>
+                  <option value="Defensa">Defensa</option>
+                  <option value="Mediocampista">Mediocampista</option>
+                  <option value="Delantero">Delantero</option>
                 </select>
+                <p v-if="errors.position" class="text-red-500 text-sm font-semibold">
+                  {{ errors.position }}
+                </p>
               </div>
-
               <!-- Jersey Number -->
               <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                   Dorsal
                 </label>
-
                 <input
-                  class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
+                  v-model="number"
+                  class="w-full rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 dark:text-white text-sm"
                   max="99"
                   min="1"
                   placeholder="7"
                   type="number"
                 />
+                <p v-if="errors.number" class="text-red-500 text-sm font-semibold">
+                  {{ errors.number }}
+                </p>                
               </div>
-
               <!-- Height -->
               <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                   Altura (cm)
                 </label>
-
                 <input
-                  class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
+                  v-model="height"
+                  class="w-full rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 dark:text-white text-sm"
                   placeholder="185"
                   type="number"
                 />
+                <p v-if="errors.height" class="text-red-500 text-sm font-semibold">
+                  {{ errors.height }}
+                </p>
               </div>
-
               <!-- Weight -->
               <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                   Peso (kg)
                 </label>
-
                 <input
+                  v-model="weight"
                   class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
                   placeholder="80"
                   type="number"
                 />
+                <p v-if="errors.weight" class="text-red-500 text-sm font-semibold">
+                  {{ errors.weight }}
+                </p>                
               </div>
 
             </div>
-
             <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
               <p class="text-xs text-slate-500 italic">
                 Al registrar a este jugador, confirmas que cumple con todos los
@@ -358,207 +453,6 @@ const addNewTeam = handleSubmit(async (values) => {
             </div>
 
           </div>
-        </div>
-
-      </form>
-      <form
-        class="space-y-8 bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800"
-        @submit.prevent="addNewTeam"
-      >
-        <!-- Section: Informacion General -->
-        <div>
-          <div
-            class="flex items-center gap-2 mb-6 pb-2 border-b border-slate-100 dark:border-slate-800"
-          >
-            <FaIcon icon="fa-circle-info" class="text-blue-800 text-2xl"/>
-            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Información General</h3>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
-              <label class="text-sm font-semibold text-gray-800 dark:text-gray-100">Nombre del Equipo</label>
-              <input
-                v-model="name"
-                type="text"
-                placeholder="Ej: Los Galácticos FC"
-                class="w-full rounded border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 text-gray-800 dark:text-gray-100"
-              />
-              <p v-if="errors.name" class="text-red-500 text-sm font-semibold">
-                {{ errors.name }}
-              </p>
-            </div>
-
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-gray-800 dark:text-gray-100">Ciudad o Municipio</label>
-              <input
-                v-model="city"
-                type="text"
-                placeholder="Ej: Naranjos"
-                class="w-full rounded border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 text-gray-800 dark:text-gray-100"
-              />
-              <p v-if="errors.city" class="text-red-500 text-sm font-semibold">
-                {{ errors.city }}
-              </p>
-            </div>
-
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-gray-800 dark:text-gray-100">Zona</label>
-              <select
-                v-model="zone"
-                class="w-full rounded border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 text-gray-800 dark:text-gray-100"
-              >
-                <option value="" selected disabled>Selecciona una región</option>
-                <option value="Zona Golfo">Zona Golfo</option>
-                <option value="Zona Norte">Zona Norte</option>
-              </select>
-              <p v-if="errors.zone" class="text-red-500 text-sm font-semibold">
-                {{ errors.zone }}
-              </p>
-            </div>
-
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-gray-800 dark:text-gray-100">Color Principal</label>
-
-              <div class="flex items-center gap-3">
-                <input
-                  v-model="createTeamForm.primaryColor"
-                  type="color"
-                  class="h-10 w-16 p-1 rounded border-slate-300 dark:border-slate-700  dark:bg-slate-800 bg-transparent"
-                />
-                <span class="text-xs text-slate-500">
-                  Identificador visual del equipo
-                </span>
-              </div>
-            </div>
-
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                Escudo del Equipo
-              </label>
-
-              <div class="flex items-center justify-center w-full">
-                <label
-                  class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded cursor-pointer bg-slate-50 dark:hover:bg-slate-800 dark:bg-slate-800 hover:bg-slate-100 dark:border-slate-700 transition-all"
-                >
-
-                  <!-- PREVIEW -->
-                  <img
-                    v-if="preview"
-                    :src="preview"
-                    class="h-20 w-20 object-contain"
-                  />
-
-                  <!-- ESTADO VACÍO -->
-                  <div
-                    v-else
-                    class="flex flex-col items-center justify-center pt-5 pb-6"
-                  >
-                    <FaIcon icon="fa-image" class="text-slate-400 text-4xl mb-2" />
-
-                    <p class="text-xs text-slate-500 dark:text-slate-400">
-                      PNG, JPG o SVG (Máx. 2MB)
-                    </p>
-                  </div>
-
-                  <input
-                    type="file"
-                    class="hidden"
-                    accept="image/png,image/jpeg,image/svg+xml"
-                    @change="handleLogoChange"
-                  />
-                </label>
-              </div>
-
-              <p v-if="logoError" class="text-red-500 text-sm font-semibold">
-                {{ logoError }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section: Personal Técnico -->
-        <div>
-          <div
-            class="flex items-center gap-2 mb-6 pb-2 border-b border-slate-100 dark:border-slate-800"
-          >
-            <FaIcon icon="fa-user-check" class="text-blue-800 text-2xl"/>
-            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Responsable del Equipo</h3>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-gray-800 dark:text-gray-100">Entrenador Principal o Responsable del Equipo</label>
-
-              <div class="relative">                
-                <FaIcon icon="fa-user" class="text-slate-400 text-lg absolute left-3 top-2.5"/>
-
-                <input
-                  v-model="coach"
-                  type="text"
-                  placeholder="Nombre completo"
-                  class="w-full pl-10 rounded border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 text-gray-800 dark:text-gray-100"
-                />
-              <p v-if="errors.coach" class="text-red-500 text-sm font-semibold">
-                {{ errors.coach }}
-              </p>
-              </div>
-            </div>
-
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-gray-800 dark:text-gray-100">Correo Electrónico de Contacto</label>
-
-              <div class="relative">
-                <FaIcon icon="fa-envelope" class="text-slate-400 text-lg absolute left-3 top-2.5"/>
-
-                <input
-                  v-model="email"
-                  type="email"
-                  placeholder="correo@ejemplo.com"
-                  class="w-full pl-10 rounded border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 text-gray-800 dark:text-gray-100"
-                />
-                <p v-if="errors.email" class="text-red-500 text-sm font-semibold">
-                  {{ errors.email }}
-                </p>                
-              </div>
-            </div>
-
-            <div class="flex flex-col gap-2 col-span-1 md:col-span-2">
-              <label class="text-sm font-semibold text-gray-800 dark:text-gray-100">Asignar Delegado <span class="text-slate-500 font-light dark:text-slate-400">(opcional)</span></label>
-
-                <input
-                  v-model="createTeamForm.delegate"
-                  type="text"
-                  placeholder="Ej: Juan Peréz"
-                  class="w-full rounded border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-blue-700 focus:border-blue-700 text-gray-800 dark:text-gray-100"
-                />
-
-              <p
-                class="text-2xs text-slate-400 uppercase tracking-wider font-bold mt-1"
-              >
-                El delegado gestionará las actas de los partidos.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div
-          class="flex items-center justify-end gap-4 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800"
-        >
-          <button
-            type="button"
-            class="px-6 py-3 text-sm font-bold text-slate-600 border border-blue-500/80 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-all"
-          >
-            <FaIcon icon="fa-ban" class="text-blue-500 text-lg"/>
-            Cancelar
-          </button>
-
-          <button
-            type="submit"
-            class="px-8 py-3 text-sm font-bold text-white bg-blue-800 hover:bg-blue-800/90 rounded-lg shadow-lg shadow-primary/20 transition-all flex items-center gap-2"
-          >
-            <FaIcon icon="fa-floppy-disk" class="text-white text-lg"/>
-            Registrar Equipo
-          </button>
         </div>
       </form>
 
@@ -574,8 +468,8 @@ const addNewTeam = handleSubmit(async (values) => {
           <p
             class="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed"
           >
-            Asegúrate de que el escudo tenga una buena resolución para que se vea
-            correctamente en las tablas de clasificación y perfiles de partido. Se
+            Asegúrate de que la imagen tenga una buena resolución para que se vea
+            correctamente en las tablas de clasificación y en la plantilla del equipo. Se
             recomienda un formato cuadrado.
           </p>
         </div>

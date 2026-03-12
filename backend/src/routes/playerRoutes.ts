@@ -10,10 +10,10 @@ const router = Router();
 router.get('/team/:teamId', PlayerController.getByTeam);
 
 // Obtener un solo jugador por ID
-router.get('/details/:id', PlayerController.getOne);
+router.get('/player/details/:id', PlayerController.getOne);
 
 // Registrar un nuevo jugador
-router.post('/regitser', upload.single('photo'), PlayerController.create);
+router.post('/team/regitser', upload.single('photo'), PlayerController.create);
 
 // Actualizar un jugador
 router.put('/update/:id', upload.single('photo'), PlayerController.update); 

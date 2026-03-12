@@ -5,7 +5,7 @@ import type { CreatePlayer } from "@/interfaces/Player";
 import PlayerServices from "@/services/PlayerServices";
 import { objectToFormData } from "@/utils/getImage";
 
-export const useTeam = () => {
+export const usePlayer = () => {
   const router = useRouter()
   const { fire } = useThemedSwal()
 
@@ -31,13 +31,15 @@ export const useTeam = () => {
   const createPlayerForm = reactive<CreatePlayer>({
     fullName: "",
     number: 0,
-    position: "",
-    isStarter: "",
-    status: "",
+    position: "Portero",
+    isStarter: "Suplente",
+    status: "Activo",
     team: "",
     city: "",
     height: 0,
-    weight: 0
+    weight: 0,
+    age: 0,
+    birthDate: '',
   })
 
   // const updateTeamForm = reactive<UpdateTeam>({

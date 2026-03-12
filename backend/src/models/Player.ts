@@ -3,6 +3,7 @@ import type { IPlayer } from '../interfaces/Player.js'
 
 const playerSchema = new Schema<IPlayer>({
   fullName: { type: String, required: true },
+  age: { type: Number, required: true},
   photo: { type: String, required: true },
   isStarter: { 
     type: String,
@@ -17,7 +18,7 @@ const playerSchema = new Schema<IPlayer>({
   },
   status: { 
     type: String, 
-    enum: ['Activo', 'Lesionado', 'Pendiente'], 
+    enum: ['Activo', 'Lesionado', 'Inactivo'], 
     default: 'Activo' 
   },
   team: { type: Schema.Types.ObjectId, ref: 'Team', required: true },

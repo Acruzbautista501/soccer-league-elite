@@ -20,7 +20,8 @@ const openAddPlayer = (team: Team) => {
   router.push({
     name: 'AgregarJugador',
     params: {
-      name: team.name
+      id: team._id,
+      name: team.name,
     }
   })
 }
