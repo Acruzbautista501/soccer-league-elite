@@ -6,14 +6,26 @@ import path from 'path';
 
 import teamRoutes from './routes/teamRoutes.js';
 import playerRoutes from './routes/playerRoutes.js';
-import calendarRoutes from './routes/calendarRoutes.js'
+import calendarRoutes from './routes/calendarRoutes.js';
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET','POST','PUT', 'PATCH', 'DELETE'],
+  credentials: true
+}));
+
 app.use(express.json());
+
+// Ruta raíz
+app.get('/', (req, res) => {
+  res.send('API Liga Elite funcionando');
+});
 
 // SERVIR IMÁGENES
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));

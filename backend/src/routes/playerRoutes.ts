@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { PlayerController } from "../controllers/PlayerController.js";
+import { upload } from "../middlewares/upload.js";
 
 const router = Router();
 
@@ -12,10 +13,10 @@ router.get('/team/:teamId', PlayerController.getByTeam);
 router.get('/details/:id', PlayerController.getOne);
 
 // Registrar un nuevo jugador
-router.post('/add', PlayerController.create);
+router.post('/regitser', upload.single('photo'), PlayerController.create);
 
 // Actualizar un jugador
-router.put('/update/:id', PlayerController.update); 
+router.put('/update/:id', upload.single('photo'), PlayerController.update); 
 
 // Eliminar jugador
 router.delete('/delete/:id', PlayerController.delete);   // Eliminar

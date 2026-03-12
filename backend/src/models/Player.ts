@@ -3,6 +3,7 @@ import type { IPlayer } from '../interfaces/Player.js'
 
 const playerSchema = new Schema<IPlayer>({
   fullName: { type: String, required: true },
+  photo: { type: String, required: true },
   isStarter: { 
     type: String,
     enum: [ 'Titular', 'Suplente' ],

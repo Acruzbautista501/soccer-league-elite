@@ -2,6 +2,7 @@ import { Document, Types } from "mongoose";
 
 export interface IPlayer extends Document {
   fullName: string;
+  photo: string;
   isStarter: 'Titular' | 'Suplente';
   number: number;
   age: number;
