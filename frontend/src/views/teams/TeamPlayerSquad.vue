@@ -12,7 +12,7 @@ import type { Team } from '@/interfaces/Team';
 const route = useRoute()
 const router = useRouter()
 
-const { team, teamPlayer, getTeam, getPlayersTeam} = useTeam()
+const { team, teamPlayer, getPlayersTeam} = useTeam()
 
 const teamId = route.params.id as string
 
@@ -26,8 +26,7 @@ const openAddPlayer = (team: Team) => {
 }
 
 onMounted( async () => {
-  getTeam(teamId)
-  getPlayersTeam(teamId)
+  await getPlayersTeam(teamId)
 })
 
 </script>

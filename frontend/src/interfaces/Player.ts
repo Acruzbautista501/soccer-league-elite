@@ -1,23 +1,17 @@
-export interface Player {
+export interface CreatePlayer {
+  fullName: string
+  number: number
+  position: string
+  isStarter: string
+  status: string
+  team: string
+  city: string
+  height: number
+  weight: number
+}
 
-  id?: string;
-
-  nombre: string;
-  apellidos: string;
-
-  posicion:
-    | "portero"
-    | "defensa"
-    | "mediocampista"
-    | "delantero";
-
-  dorsal: number;
-  edad: number;
-  nacionalidad: string;
-
-  goles: number;
-  asistencias: number;
-  atajadas?: number;
-
-  fotoUrl?: string;
+export interface Player extends CreatePlayer{
+  _id: string
+  createdAt?: Date
+  updatedAt?: Date
 }

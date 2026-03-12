@@ -1,3 +1,30 @@
-export const getImageUrl = (path: string) => {
+export const getImageUrl = (path?: string) => {
+  if (!path) {
+    return "/images/default-team.png"
+  }
+
   return `${import.meta.env.VITE_ASSETS_URL}${path}`
+}
+
+export function objectToFormData(
+  obj: Record<string, any>,
+  files?: Record<string, File | null>
+) {
+  const formData = new FormData()
+
+  Object.entries(obj).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      formData.append(key, String(value))
+    }
+  })
+
+  if (files) {
+    Object.entries(files).forEach(([field, file]) => {
+      if (file) {
+        formData.append(field, file)
+      }
+    })
+  }
+
+  return formData
 }

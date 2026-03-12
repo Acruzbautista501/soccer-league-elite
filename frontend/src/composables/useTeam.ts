@@ -70,9 +70,8 @@ export const useTeam = () => {
   // Obtener un equipo de la liga
   const getTeam = async (id: string) => {
     try {
-      const teamLoad = await teamService.getTeam(id)
-      const { data: { data } } = await teamLoad
-      team.value = data || {}
+    const { data: { data } } = await teamService.getTeam(id)
+    team.value = data
     } catch (error: any) {
       fire({
         title: 'Error',

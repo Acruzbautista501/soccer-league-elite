@@ -250,7 +250,7 @@ const addNewTeam = handleSubmit(async (values) => {
 
                 <input
                   class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
-                  placeholder="ej. Cristiano Ronaldo"
+                  placeholder="ej. Juan Martínez"
                   type="text"
                 />
               </div>
@@ -270,10 +270,15 @@ const addNewTeam = handleSubmit(async (values) => {
               <!-- Nationality -->
               <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
-                  Nacionalidad
+                  Ciudad o Municipio
                 </label>
 
-                <select
+                <input
+                  class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
+                  placeholder="ej. Naranjos"
+                  type="text"
+                />
+                <!-- <select
                   class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-primary dark:text-white text-sm"
                 >
                   <option value="">Seleccionar País</option>
@@ -282,7 +287,7 @@ const addNewTeam = handleSubmit(async (values) => {
                   <option value="BR">Brasil</option>
                   <option value="FR">Francia</option>
                   <option value="ES">España</option>
-                </select>
+                </select> -->
               </div>
 
               <!-- Position -->
