@@ -24,6 +24,7 @@ export interface Player {
   _id?: string
   fullName: string
   age: number
+  birthDate: string
   photo: string
   number: number
   position: 'Portero' | 'Defensa' | 'Mediocampista' | 'Delantero'

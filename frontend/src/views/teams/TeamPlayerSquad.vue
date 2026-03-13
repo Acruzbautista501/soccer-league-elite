@@ -32,8 +32,6 @@ const forwards = computed(() =>
   teamPlayer.value.filter(player => player.position === 'Delantero')
 )
 
-
-
 const openAddPlayer = (team: Team) => {
   router.push({
     name: 'AgregarJugador',
@@ -46,6 +44,15 @@ const openAddPlayer = (team: Team) => {
   })
 }
 
+const openEditSquadPlayer = (team: Team) => {
+  router.push({
+    name: 'EditarPlantilla',
+    params: {
+      id: team._id
+    }
+  })
+}
+
 onMounted( async () => {
   await getPlayersTeam(teamId)
 })
@@ -53,7 +60,7 @@ onMounted( async () => {
 </script>
 <template>
   <div class="flex-1 p-3 sm:p-5 md:p-10">
-    <div class="max-w-9xl mx-auto flex flex-col gap-8">
+    <div class="w-full mx-auto flex flex-col gap-8">
       <section
         class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6"
       >
@@ -77,7 +84,7 @@ onMounted( async () => {
             </div>
           </div>
         </div>
-        <div class="flex flex-col xs:flex-row gap-2 sm:gap-3 w-full lg:w-auto">
+        <div class="flex flex-col lg:flex-row gap-2 sm:gap-3 w-full lg:w-auto">
           <button
             @click="router.back()" 
             class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 text-md font-medium border text-slate-600 dark:text-slate-400 border-slate-400 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
@@ -85,7 +92,11 @@ onMounted( async () => {
             <FaIcon icon="fa-circle-arrow-left" class="text-xl"/>
             Volver
           </button>
-          <button v-if="teamPlayer.length > 0" class="bg-blue-800 hover:bg-blue-600/90 text-white px-4 py-2 rounded font-bold text-md shadow-sm w-full sm:w-auto flex items-center justify-center gap-2 transition-all">
+          <button 
+            v-if="teamPlayer.length > 0" 
+            @click="openEditSquadPlayer(team)"
+            class="bg-blue-800 hover:bg-blue-600/90 text-white px-4 py-2 rounded font-bold text-md shadow-sm w-full sm:w-auto flex items-center justify-center gap-2 transition-all"
+            >
             <FaIcon icon="fa-pen-to-square" class="text-white text-xl"/>
             Editar Plantilla
           </button>
@@ -117,27 +128,27 @@ onMounted( async () => {
           <span class="w-1 h-6 bg-blue-800 dark:bg-blue-500 rounded-full"></span>
           <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Porteros</h3>
         </div>
-        <GoalKeeperTable :goalKeepers="goalKeepers" />
+        <GoalKeeperTable :goalKeepers="goalKeepers" :team="team" />
         <!-- DEFENSAS -->
         <div class="flex items-center gap-2 mb-1 mt-5">
           <span class="w-1 h-6 bg-blue-800 dark:bg-blue-500 rounded-full"></span>
           <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Defensas</h3>
         </div>
-        <DefendersTable :defenders="defenders"/>
+        <DefendersTable :defenders="defenders" :team="team"/>
         <!-- MEDIOCAMPISTAS -->
         <div class="flex items-center gap-2 mb-1 mt-5">
           <span class="w-1 h-6 bg-blue-800 dark:bg-blue-500 rounded-full"></span>
           <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Mediocampistas</h3>
         </div>         
-        <MidfieldersTable :midFielders="midFielders"/>
+        <MidfieldersTable :midFielders="midFielders" :team="team"/>
         <!-- DELANTEROS -->
         <div class="flex items-center gap-2 mb-1 mt-5">
           <span class="w-1 h-6 bg-blue-800 dark:bg-blue-500 rounded-full"></span>
           <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Delanteros</h3>
         </div> 
-        <ForwardsTable :forwards="forwards"/>
+        <ForwardsTable :forwards="forwards" :team="team"/>
 
-        <div class="bg-blue-500/20 border border-blue-500/80 p-4 rounded-xl flex items-center justify-between">
+        <div class="bg-blue-500/20 border border-blue-500/80 p-4 rounded-xl flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
           <p class="text-sm text-blue-500 font-medium">Última actualización: hace 2 horas</p>
           <div class="flex gap-3">
             <button class="px-4 py-2 text-slate-600 dark:text-slate-400 font-medium text-sm hover:underline">Imprimir Plantilla</button>

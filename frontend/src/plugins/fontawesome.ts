@@ -31,7 +31,9 @@ import {
   faCircleArrowLeft,
   faDeleteLeft,
   faUserPlus,
-  faCloudArrowUp
+  faCloudArrowUp,
+  faPencil,
+  faTrashCan,
 } from '@fortawesome/free-solid-svg-icons'
 
 /* Agrégalos a la librería */
@@ -65,5 +67,7 @@ library.add(
   faCircleArrowLeft,
   faDeleteLeft,
   faUserPlus,
-  faCloudArrowUp
+  faCloudArrowUp,
+  faPencil,
+  faTrashCan,
 )

@@ -73,7 +73,7 @@ const openSquadTeam = (team: Team) => {
 
 <template>
   <div class="flex-1 p-6 md:p-10">
-    <div class="max-w-9xl mx-auto flex flex-col gap-8">
+    <div class="w-full mx-auto flex flex-col gap-8">
       <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 class="text-slate-900 dark:text-slate-100 text-3xl font-black tracking-tight">Gestión de Equipos</h1>

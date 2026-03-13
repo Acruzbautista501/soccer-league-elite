@@ -1,19 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useRoute, useRouter } from 'vue-router'
 import { usePlayer } from '@/composables/usePalyer'
+import { getImageUrl } from '@/utils/getImage'
 
 const router = useRouter()
 const route = useRoute()
 
 const teamName = route.params.name as string
 const teamId = route.query.id as string
+
+const teamNamePlayer = computed(() => {
+  if (typeof player.value.team === 'string') return ''
+  return player.value.team.name
+})
 console.log(teamId)
 
-const { createPlayerForm, addPlayer, } = usePlayer()
+const { player, updatePlayerForm, getPlayer, updatePlayer, } = usePlayer()
 
 const logoFile = ref<File | null>(null)
 const preview = ref<string | null>(null)
@@ -107,7 +113,7 @@ const schema = toTypedSchema(
   })
 )
 
-const { handleSubmit, errors, defineField } = useForm({
+const { handleSubmit, errors, defineField, setValues } = useForm({
   validationSchema: schema,
   initialValues: {
     fullName: '',
@@ -135,21 +141,44 @@ const [city] = defineField('city')
 const [height] = defineField('height')
 const [weight] = defineField('weight')
 // Agregar nuevo equipo
-const addNewPlayer = handleSubmit(async (values) => {
+const updatePlayers = handleSubmit(async (values) => {
 
-  createPlayerForm.fullName = values.fullName
-  createPlayerForm.age = values.age
-  createPlayerForm.birthDate = values.birthDate
-  createPlayerForm.number= values.number
-  createPlayerForm.position = values.position
-  createPlayerForm.isStarter = values.isStarter
-  createPlayerForm.status = values.status
-  createPlayerForm.team = teamId
-  createPlayerForm.city = values.city
-  createPlayerForm.height = values.height
-  createPlayerForm.weight = values.weight
+  updatePlayerForm.fullName = values.fullName
+  updatePlayerForm.age = values.age
+  updatePlayerForm.birthDate = values.birthDate
+  updatePlayerForm.number= values.number
+  updatePlayerForm.position = values.position
+  updatePlayerForm.isStarter = values.isStarter
+  updatePlayerForm.status = values.status
+  updatePlayerForm.team = teamId
+  updatePlayerForm.city = values.city
+  updatePlayerForm.height = values.height
+  updatePlayerForm.weight = values.weight
 
-  await addPlayer(logoFile.value)
+  await updatePlayer(logoFile.value)
+})
+
+onMounted(async () => {
+  await getPlayer(teamId)
+
+  setValues({
+    fullName: player.value.fullName,
+    age: player.value.age,
+    birthDate: player.value.birthDate,
+    number: player.value.number,
+    position: player.value.position,
+    isStarter: player.value.isStarter,
+    status: player.value.status,
+    city: player.value.city,
+    height: player.value.height,
+    weight: player.value.weight    
+  })
+
+  updatePlayerForm._id = player.value._id
+
+  if (player.value.photo) {
+    preview.value = getImageUrl(player.value.photo)
+  }
 })
 </script>
 
@@ -158,8 +187,8 @@ const addNewPlayer = handleSubmit(async (values) => {
     <div class="w-full mx-auto flex flex-col gap-8">
       <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 class="text-slate-900 dark:text-slate-100 text-3xl font-black tracking-tight">Añadir Nuevo Jugador</h1>
-          <p class="text-slate-500 dark:text-slate-400 mt-1">Registra un nuevo jugador en la plantilla oficial de <span class="font-semibold">{{ teamName }}</span>.</p>
+          <h1 class="text-slate-900 dark:text-slate-100 text-3xl font-black tracking-tight">Editar Jugador</h1>
+          <p class="text-slate-500 dark:text-slate-400 mt-1">Actualiza la información del jugador en la plantilla oficial de <span class="font-semibold">{{ teamNamePlayer }}</span>.</p>
         </div>
         <div class="flex items-center gap-3">
           <button
@@ -171,10 +200,10 @@ const addNewPlayer = handleSubmit(async (values) => {
           </button>           
           <button
             type="submit"
-            form="add-player"
+            form="edit-player"
             class="px-8 py-3 text-sm font-bold text-white bg-blue-800 hover:bg-blue-800/90 rounded shadow-lg shadow-primary/20 transition-all flex items-center gap-2"
           >
-            <FaIcon icon="fa-user-plus" class="text-white text-lg"/>
+            <FaIcon icon="fa-pen-to-square" class="text-white text-lg"/>
             Añadir Jugador
           </button>
         </div>       
@@ -195,7 +224,7 @@ const addNewPlayer = handleSubmit(async (values) => {
           </div>
         </div> -->
       </section>
-      <form id="add-player" class="grid grid-cols-1 lg:grid-cols-3 gap-8" @submit.prevent="addNewPlayer">
+      <form id="edit-player" class="grid grid-cols-1 lg:grid-cols-3 gap-8" @submit.prevent="addNewPlayer">
         <!-- Photo Upload Section -->
         <div class="lg:col-span-1">
           <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">

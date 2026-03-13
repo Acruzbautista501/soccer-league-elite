@@ -30,12 +30,6 @@ const router = createRouter({
               component: () => import('@/views/teams/TeamsList.vue')
             },
             {
-              path: '/:id/players',
-              name: 'PlantillaEquipo',
-              component: () => import('@/views/teams/TeamPlayerSquad.vue'),
-              props: true
-            },
-            {
               path: 'create-team',
               name: 'CrearEquipo',
               component: () => import('@/views/teams/TeamsCreate.vue')
@@ -47,9 +41,27 @@ const router = createRouter({
               props: true
             },
             {
+              path: '/:id/players',
+              name: 'PlantillaEquipo',
+              component: () => import('@/views/teams/TeamPlayerSquad.vue'),
+              props: true
+            },
+            {
+              path: '/:id/edit-players',
+              name: 'EditarPlantilla',
+              component: () => import('@/views/players/PlayerListView.vue'),
+              props: true
+            },                            
+            {
               path: '/team/:name/create-player',
               name: 'AgregarJugador',
               component: () => import('@/views/players/CreatePlayerView.vue'),
+              props: true
+            },
+            {
+              path: '/team/:name/edit-player',
+              name: 'EditarJugador',
+              component: () => import('@/views/players/EditPlayerView.vue'),
               props: true
             },            
           ]

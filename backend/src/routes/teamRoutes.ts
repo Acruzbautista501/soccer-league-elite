@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { TeamController } from "../controllers/TeamController.js";
-import { upload } from "../middlewares/upload.js";
+import { createUploader } from "../middlewares/upload.js";
 
 const router = Router();
+const uploadTeam = createUploader('teams')
 
  // Listar equipos filtrados por región
 router.get('/', TeamController.getAll);
@@ -11,10 +12,10 @@ router.get('/', TeamController.getAll);
 router.get('/details/:id', TeamController.getOne);
 
 // Registrar nuevo equipo
-router.post('/register', upload.single('logo'), TeamController.create);
+router.post('/register', uploadTeam.single('logo'), TeamController.create);
 
 // Actualizar datos del equipo
-router.put('/update/:id', upload.single('logo'), TeamController.update);
+router.put('/update/:id', uploadTeam.single('logo'), TeamController.update);
 
 // Cambiar estado (Activo/Suspendido)
 router.patch('/toggle-status/:id', TeamController.toggleStatus);

@@ -1,11 +1,27 @@
 <script setup lang="ts">
-import type { Player } from '@/interfaces/Team';
+import type { Player, Team } from '@/interfaces/Team';
 import PlayersTable from './PlayersTable.vue';
 import { getImageUrl } from '@/utils/getImage';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   forwards: Player[]
+  team: Team
 }>()
+
+const router = useRouter()
+
+const openAddPlayer = (team: Team) => {
+  router.push({
+    name: 'AgregarJugador',
+    params: {
+      name: team.name
+    },
+    query: {
+      id: team._id
+    }
+  })
+}
 
 </script>
 
@@ -18,6 +34,7 @@ const props = defineProps<{
           Este equipo aún no tiene delanteros registrados.
         </p>
         <button
+          @click="openAddPlayer(team)"
           class="bg-blue-800 hover:bg-blue-600/90 text-white px-6 py-2 rounded font-bold text-sm shadow-sm hover:shadow-md transition-all flex items-center gap-2"
         >
           <FaIcon icon="fa-user-plus"/>
@@ -54,7 +71,7 @@ const props = defineProps<{
       {{ forward.number }}
     </td>
     <!-- edad -->
-    <td class="px-6 py-4">
+    <td class="hidden md:table-cell px-3 sm:px-6 py-3 text-center">
       {{ forward.age }}
     </td>
     <!-- municipio -->
@@ -62,11 +79,11 @@ const props = defineProps<{
       {{ forward.city }}
     </td>
     <!-- peso -->
-    <td class="px-6 py-4 text-center">
+    <td class="hidden md:table-cell px-3 sm:px-6 py-3 text-center">
       {{ forward.weight }}
     </td>
     <!-- altura -->
-    <td class="px-6 py-4 text-center">
+    <td class="hidden md:table-cell px-3 sm:px-6 py-3 text-center">
       {{ forward.height }}
     </td>
   </tr>  

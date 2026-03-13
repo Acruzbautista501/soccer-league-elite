@@ -1,9 +1,10 @@
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useThemedSwal } from "./useThemedSwal";
-import type { CreatePlayer } from "@/interfaces/Player";
+import type { CreatePlayer, Player, UpdatePlayer } from "@/interfaces/Player";
 import PlayerServices from "@/services/PlayerServices";
 import { objectToFormData } from "@/utils/getImage";
+import type { UpdateTeam } from "@/interfaces/Team";
 
 export const usePlayer = () => {
   const router = useRouter()
@@ -11,22 +12,22 @@ export const usePlayer = () => {
 
 
   const playerService = PlayerServices
-  // const teams = ref<Team[]>([])
 
-  // const team = ref<Team>({
-  //   _id: "",
-  //   name: "",
-  //   city: "",
-  //   region: "",
-  //   primaryColor: "",
-  //   logoUrl: "",
-  //   coach: "",
-  //   contactEmail: "",
-  //   delegate: "",
-  //   status: ""
-  // })
-
-  // const teamPlayer = ref<Player[]>([])
+  const player = ref<Player>({
+    _id: "",
+    fullName: "",
+    age: 0,
+    birthDate: "",
+    number: 0,
+    position: "Portero",
+    isStarter: "Suplente",
+    status: "Activo",
+    team: "",
+    city: "",
+    height: 0,
+    weight: 0,
+    photo: ""
+  })
 
   const createPlayerForm = reactive<CreatePlayer>({
     fullName: "",
@@ -40,20 +41,24 @@ export const usePlayer = () => {
     weight: 0,
     age: 0,
     birthDate: '',
+    photo: ""
   })
 
-  // const updateTeamForm = reactive<UpdateTeam>({
-  //   _id: "",
-  //   name: "",
-  //   city: "",
-  //   region: "",
-  //   primaryColor: "",
-  //   logoUrl: "",
-  //   coach: "",
-  //   contactEmail: "",
-  //   delegate: "", 
-  //   status: "Actiivo"
-  // })
+  const updatePlayerForm = reactive<UpdatePlayer>({
+    _id: "",
+    fullName: "",
+    age: 0,
+    birthDate: "",
+    number: 0,
+    position: "Portero",
+    isStarter: "Suplente",
+    status: "Activo",
+    team: "",
+    city: "",
+    height: 0,
+    weight: 0,
+    photo: ""
+  })
 
   // Obtener los equipos de la liga
   // const getTeams = async () => {
@@ -72,37 +77,18 @@ export const usePlayer = () => {
   // }
 
   // Obtener un equipo de la liga
-  // const getTeam = async (id: string) => {
-  //   try {
-  //   const { data: { data } } = await teamService.getTeam(id)
-  //   team.value = data
-  //   } catch (error: any) {
-  //     fire({
-  //       title: 'Error',
-  //       text: error.response?.data?.message || 'No se pudo cargar el equipo.',
-  //       icon: 'error'
-  //     })
-  //   }
-  // }
-
-  // const getPlayersTeam = async (id: string) => {
-  //   try {
-
-  //     const response = await teamService.getPlayersTeam(id)
-
-  //     const { team: teamData, players } = response.data.data
-
-  //     team.value = teamData
-  //     teamPlayer.value = players
-
-  //   } catch (error: any) {
-  //     fire({
-  //       title: 'Error',
-  //       text: error.response?.data?.message || 'No se pudieron cargar los jugadores del equipo.',
-  //       icon: 'error'
-  //     })
-  //   }
-  // }
+  const getPlayer = async (id: string) => {
+    try {
+    const { data: { data } } = await playerService.getplayer(id)
+    player.value = data
+    } catch (error: any) {
+      fire({
+        title: 'Error',
+        text: error.response?.data?.message || 'No se pudo cargar el equipo.',
+        icon: 'error'
+      })
+    }
+  }
 
   // Agregar un nuevo equipo en la liga
   const addPlayer = async (photo: File | null) => {
@@ -131,46 +117,34 @@ export const usePlayer = () => {
   }
 
   // Editar equipo
-  // const updateTeam = async (logo: File | null) => {
-  //   try {
+  const updatePlayer = async (photo: File | null) => {
+    try {
+      const formData = objectToFormData(updatePlayerForm, {
+        photo
+      })
 
-  //     const formData = new FormData()
+      const { data } = await playerService.updatePlayer(updatePlayerForm._id, formData)
 
-  //     formData.append('name', updateTeamForm.name)
-  //     formData.append('city', updateTeamForm.city)
-  //     formData.append('region', updateTeamForm.region)
-  //     formData.append('primaryColor', updateTeamForm.primaryColor)
-  //     formData.append('coach', updateTeamForm.coach)
-  //     formData.append('contactEmail', updateTeamForm.contactEmail)
-  //     formData.append('delegate', updateTeamForm.delegate)
-  //     formData.append('status', updateTeamForm.status)
+      await fire({
+        title: 'Equipo actualizado',
+        text: data.message || 'La información del equipo se actualizó correctamente.',
+        icon: 'success'
+      })
 
-  //     if (logo) {
-  //       formData.append('logo', logo)
-  //     }
+      // await getTeams()
 
-  //     const { data } = await teamService.updateTeam(updateTeamForm._id, formData)
+      router.push({
+        name: 'PlantillaEquipo'
+      })
 
-  //     await fire({
-  //       title: 'Equipo actualizado',
-  //       text: data.message || 'La información del equipo se actualizó correctamente.',
-  //       icon: 'success'
-  //     })
-
-  //     await getTeams()
-
-  //     router.push({
-  //       name: 'Equipos'
-  //     })
-
-  //   } catch (error: any) {
-  //     await fire({
-  //       title: 'Error',
-  //       text: error.response?.data?.message || 'No se pudo actualizar el equipo.',
-  //       icon: 'error'
-  //     })
-  //   }
-  // } 
+    } catch (error: any) {
+      await fire({
+        title: 'Error',
+        text: error.response?.data?.message || 'No se pudo actualizar el equipo.',
+        icon: 'error'
+      })
+    }
+  } 
 
   // const deleteTeam = async (id: string) => {
   //   const confirm = await fire ({
@@ -205,17 +179,17 @@ export const usePlayer = () => {
   // }
 
   return{
-    // teams,
-    // team,
+    player,
     // teamPlayer,
     createPlayerForm,
+    updatePlayerForm,
     // updateTeamForm,
 
     // getTeams,
-    // getPlayersTeam,
+    getPlayer,
     addPlayer,
     // getTeam,
-    // updateTeam,
+    updatePlayer,
     // deleteTeam
   }
 }

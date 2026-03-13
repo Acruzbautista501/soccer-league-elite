@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { PlayerController } from "../controllers/PlayerController.js";
-import { upload } from "../middlewares/upload.js";
+import { createUploader  } from "../middlewares/upload.js";
 
 const router = Router();
+const uploadPlayer = createUploader('players')
 
 // Endpoints para Jugadores
 
@@ -13,10 +14,10 @@ router.get('/team/:teamId', PlayerController.getByTeam);
 router.get('/player/details/:id', PlayerController.getOne);
 
 // Registrar un nuevo jugador
-router.post('/team/register', upload.single('photo'), PlayerController.create);
+router.post('/team/register', uploadPlayer.single('photo'), PlayerController.create);
 
 // Actualizar un jugador
-router.put('/update/:id', upload.single('photo'), PlayerController.update); 
+router.put('/player/update/:id', uploadPlayer.single('photo'), PlayerController.update); 
 
 // Eliminar jugador
 router.delete('/delete/:id', PlayerController.delete);   // Eliminar
