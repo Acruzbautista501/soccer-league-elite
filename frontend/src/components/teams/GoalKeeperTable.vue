@@ -1,49 +1,76 @@
 <script setup lang="ts">
-import PlayersTable from './PlayersTable.vue';
+import type { Player } from '@/interfaces/Team'
+import PlayersTable from './PlayersTable.vue'
+import { getImageUrl } from '@/utils/getImage'
 
+const props = defineProps<{
+  goalKeepers: Player[]
+}>()
 </script>
 
 <template>
-  <PlayersTable> 
-    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-      <td class="dark:text-slate-400 px-6 py-4">
+  <PlayersTable>
+    <tr v-if="goalKeepers.length === 0">
+      <td colspan="6" class="px-6 py-10 text-center">
+
+        <div class="flex flex-col items-center justify-center gap-3">
+          <p class="text-slate-500 text-sm">
+            Este equipo aún no tiene porteros registrados.
+          </p>
+
+          <button
+            class="bg-blue-800 hover:bg-blue-600/90 text-white px-6 py-2 rounded font-bold text-sm shadow-sm hover:shadow-md transition-all flex items-center gap-2"
+          >
+            <FaIcon icon="fa-user-plus"/>
+            Añadir Portero
+          </button>
+        </div>
+
+      </td>
+    </tr>    
+    <tr
+      v-for="goalKeeper in goalKeepers"
+      :key="goalKeeper._id"
+      class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
+    >
+      <!-- jugador -->
+      <td class="px-6 py-4">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-100 border border-slate-200 dark:border-slate-700">
-            <img class="w-full h-full object-cover" data-alt="Marc André player portrait photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_V50F0ibQRdrxXmSnYeloZT9lD09j6PrNH6S8CTwt1MHsR3si_BJoIpttgnisT6AbEpJQJrPXRbFvW77zN3X5QnDbS1MF9A8vtTyySvmcEGfs-ii-1fHPhadP67NVYDZYmE62YecuoaXS976AHAUAq0eiSubKUkFfNpFY8sJGYji1RtgQS7IOSBn3tZOH2-TJ4C28MHUM1AwNo6-zMkIWcsqLiCuQrqyfBeFnbT6E6nsOBbyZGLho97pX7XMYIlM2gL8vKJzyFtk"/>
-          </div>
+          <img
+            class="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+            :src="getImageUrl(goalKeeper.photo)"
+            :alt="goalKeeper.fullName"
+          />
           <div>
-            <p class="text-sm font-bold">Marc André</p>
-            <p class="text-xs text-slate-500">Titular</p>
+            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">
+              {{ goalKeeper.fullName }}
+            </p>
+            <p class="text-xs text-slate-500">
+              {{ goalKeeper.isStarter }}
+            </p>
           </div>
         </div>
       </td>
-      <td class="dark:text-slate-400 px-6 py-4 text-sm font-medium">1</td>
-      <td class="dark:text-slate-400 px-6 py-4 text-sm">31</td>
-      <td class="dark:text-slate-400 px-6 py-4 text-sm">Alemania</td>
-      <td class="dark:text-slate-400 px-6 py-4 text-center text-sm">0</td>
-      <td class="dark:text-slate-400 px-6 py-4 text-center text-sm">0</td>
-    </tr>
-    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-      <td class="dark:text-slate-400 px-6 py-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-100 border border-slate-200 dark:border-slate-700">
-            <img class="w-full h-full object-cover" data-alt="Iñaki Peña player portrait photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtrnqaQehyHhAUpJTFx-QAJount-IPW99t6ZKH2E0iJVTtlcZTqg4MRE7FMFW1mRnACGthV8Fej6HF6uzTzj4axSz8QbX1tjTTyEJAPqWnjXhwnZ7VvyQ4glp_W8vn74pRPsZFs7GDqbmKSJDOTURgcIkXkYvt6YygbInatcs83mW-HgpgNz3WZbUqoQZqMgRBAjQT1smptQQ9SNm_Xv62ut3i232SAoJJsg-6nR_kpr_w0JSQMnrYXxR2OSRHd73Ag8yhrnGUjW0"/>
-          </div>
-          <div>
-            <p class="text-sm font-bold">Iñaki Peña</p>
-            <p class="text-xs text-slate-500">Suplente</p>
-          </div>
-        </div>
+      <!-- dorsal -->
+      <td class="px-6 py-4 font-medium">
+        {{ goalKeeper.number }}
       </td>
-      <td class="dark:text-slate-400 px-6 py-4 text-sm font-medium">13</td>
-      <td class="dark:text-slate-400 px-6 py-4 text-sm">24</td>
-      <td class="dark:text-slate-400 px-6 py-4 text-sm">España</td>
-      <td class="dark:text-slate-400 px-6 py-4 text-center text-sm">0</td>
-      <td class="dark:text-slate-400 px-6 py-4 text-center text-sm">0</td>
+      <!-- edad -->
+      <td class="px-6 py-4">
+        {{ goalKeeper.age }}
+      </td>
+      <!-- municipio -->
+      <td class="px-6 py-4">
+        {{ goalKeeper.city }}
+      </td>
+      <!-- peso -->
+      <td class="px-6 py-4 text-center">
+        {{ goalKeeper.weight }}
+      </td>
+      <!-- altura -->
+      <td class="px-6 py-4 text-center">
+        {{ goalKeeper.height }}
+      </td>
     </tr>
   </PlayersTable>
 </template>
-
-<style scoped>
-
-</style>

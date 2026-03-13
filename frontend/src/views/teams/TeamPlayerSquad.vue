@@ -2,7 +2,7 @@
 import { useRoute, useRouter } from 'vue-router';
 import { getImageUrl } from '@/utils/getImage'
 import { useTeam } from '@/composables/useTeam';
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import GoalKeeperTable from '@/components/teams/GoalKeeperTable.vue';
 import DefendersTable from '@/components/teams/DefendersTable.vue';
 import MidfieldersTable from '@/components/teams/MidfieldersTable.vue';
@@ -16,12 +16,32 @@ const { team, teamPlayer, getPlayersTeam} = useTeam()
 
 const teamId = route.params.id as string
 
+const goalKeepers = computed(() =>
+  teamPlayer.value.filter(player => player.position === 'Portero')
+)
+
+const defenders = computed(() =>
+  teamPlayer.value.filter(player => player.position === 'Defensa')
+)
+
+const midFielders = computed(() =>
+  teamPlayer.value.filter(player => player.position === 'Mediocampista')
+)
+
+const forwards = computed(() =>
+  teamPlayer.value.filter(player => player.position === 'Delantero')
+)
+
+
+
 const openAddPlayer = (team: Team) => {
   router.push({
     name: 'AgregarJugador',
     params: {
-      id: team._id,
-      name: team.name,
+      name: team.name
+    },
+    query: {
+      id: team._id
     }
   })
 }
@@ -32,30 +52,40 @@ onMounted( async () => {
 
 </script>
 <template>
-  <div class="flex-1 p-6 md:p-10">
+  <div class="flex-1 p-3 sm:p-5 md:p-10">
     <div class="max-w-9xl mx-auto flex flex-col gap-8">
-      <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div class="flex items-center gap-4">
-          <div class="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-xl p-2 border border-slate-100 dark:border-slate-700 flex items-center justify-center shadow-sm">
-            <img alt="Escudo Equipo" class="w-12 h-12 object-contain" data-alt="Rayo del Norte FC official team crest" :src="getImageUrl(team.logoUrl)">
+      <section
+        class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6"
+      >
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-slate-50 dark:bg-slate-800 rounded-xl p-2 border border-slate-100 dark:border-slate-700 flex items-center justify-center shadow-sm">
+            <img
+              alt="Escudo Equipo"
+              class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain"
+              :src="getImageUrl(team.logoUrl)"
+            />
           </div>
+
           <div>
-            <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{team.name}}</h2>
+            <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 truncate">
+              {{ team.name }}
+            </h2>
+
             <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
               <FaIcon icon="fa-location-dot"/>
-              {{team.city}}
+              {{ team.city }}
             </div>
           </div>
         </div>
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex flex-col xs:flex-row gap-2 sm:gap-3 w-full lg:w-auto">
           <button
             @click="router.back()" 
-            class="flex items-center gap-2 px-4 py-2 text-md font-medium border text-slate-600 dark:text-slate-400 border-slate-400 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+            class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 text-md font-medium border text-slate-600 dark:text-slate-400 border-slate-400 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
           >
             <FaIcon icon="fa-circle-arrow-left" class="text-xl"/>
             Volver
           </button>
-          <button v-if="teamPlayer.length > 0" class="bg-blue-800 hover:bg-blue-600/90 text-white px-4 py-2 rounded font-bold text-md shadow-sm flex items-center gap-2 transition-all">
+          <button v-if="teamPlayer.length > 0" class="bg-blue-800 hover:bg-blue-600/90 text-white px-4 py-2 rounded font-bold text-md shadow-sm w-full sm:w-auto flex items-center justify-center gap-2 transition-all">
             <FaIcon icon="fa-pen-to-square" class="text-white text-xl"/>
             Editar Plantilla
           </button>
@@ -87,25 +117,25 @@ onMounted( async () => {
           <span class="w-1 h-6 bg-blue-800 dark:bg-blue-500 rounded-full"></span>
           <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Porteros</h3>
         </div>
-        <GoalKeeperTable />
+        <GoalKeeperTable :goalKeepers="goalKeepers" />
         <!-- DEFENSAS -->
         <div class="flex items-center gap-2 mb-1 mt-5">
           <span class="w-1 h-6 bg-blue-800 dark:bg-blue-500 rounded-full"></span>
           <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Defensas</h3>
         </div>
-        <DefendersTable />
+        <DefendersTable :defenders="defenders"/>
         <!-- MEDIOCAMPISTAS -->
         <div class="flex items-center gap-2 mb-1 mt-5">
           <span class="w-1 h-6 bg-blue-800 dark:bg-blue-500 rounded-full"></span>
           <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Mediocampistas</h3>
         </div>         
-        <MidfieldersTable />
+        <MidfieldersTable :midFielders="midFielders"/>
         <!-- DELANTEROS -->
         <div class="flex items-center gap-2 mb-1 mt-5">
           <span class="w-1 h-6 bg-blue-800 dark:bg-blue-500 rounded-full"></span>
           <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Delanteros</h3>
         </div> 
-        <ForwardsTable />
+        <ForwardsTable :forwards="forwards"/>
 
         <div class="bg-blue-500/20 border border-blue-500/80 p-4 rounded-xl flex items-center justify-between">
           <p class="text-sm text-blue-500 font-medium">Última actualización: hace 2 horas</p>

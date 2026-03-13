@@ -117,7 +117,7 @@ export const usePlayer = () => {
         icon: 'success'
       })
       router.push({
-        name: 'Equipos'
+        name: 'PlantillaEquipo'
       })
 
     } catch (error: any) {

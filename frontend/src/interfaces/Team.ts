@@ -23,10 +23,12 @@ export interface UpdateTeam extends CreateTeam {
 export interface Player {
   _id?: string
   fullName: string
+  age: number
+  photo: string
   number: number
-  position: string
-  isStarter: string
-  status: string
+  position: 'Portero' | 'Defensa' | 'Mediocampista' | 'Delantero'
+  isStarter: 'Suplente' | 'Titular'
+  status: 'Activo' | 'Lesionado' | 'Inactivo'
   team: string
   city: string
   height: number

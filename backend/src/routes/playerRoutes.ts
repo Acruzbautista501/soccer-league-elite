@@ -13,7 +13,7 @@ router.get('/team/:teamId', PlayerController.getByTeam);
 router.get('/player/details/:id', PlayerController.getOne);
 
 // Registrar un nuevo jugador
-router.post('/team/regitser', upload.single('photo'), PlayerController.create);
+router.post('/team/register', upload.single('photo'), PlayerController.create);
 
 // Actualizar un jugador
 router.put('/update/:id', upload.single('photo'), PlayerController.update); 

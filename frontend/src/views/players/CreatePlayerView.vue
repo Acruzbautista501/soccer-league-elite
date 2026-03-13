@@ -10,7 +10,8 @@ const router = useRouter()
 const route = useRoute()
 
 const teamName = route.params.name as string
-const teamId = route.params.id as string
+const teamId = route.query.id as string
+console.log(teamId)
 
 const { createPlayerForm, addPlayer, } = usePlayer()
 

@@ -5,6 +5,6 @@ import type { Player } from "@/interfaces/Player"
 export default {
 
   createPlayer(payload: FormData) {
-    return api.post<ApiResponse<Player>>('/players/team/regitser', payload)
+    return api.post<ApiResponse<Player>>('/players/team/register', payload)
   },
 }
