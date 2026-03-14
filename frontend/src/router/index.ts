@@ -33,8 +33,6 @@ const router = createRouter({
             ]
           }
         },
-
-        // 👇 RUTA PADRE
         {
           path: 'teams',
           component: () => import('@/views/teams/TeamsLayout.vue'),
@@ -87,7 +85,7 @@ const router = createRouter({
             {
               path: ':id/edit-players',
               name: 'EditarPlantilla',
-              component: () => import('@/views/players/PlayerListView.vue'),
+              component: () => import('@/views/teams/players/PlayerListView.vue'),
               props: true,
               meta: {
                 breadcrumbs: [
@@ -99,7 +97,7 @@ const router = createRouter({
             {
               path: 'team/:name/create-player',
               name: 'AgregarJugador',
-              component: () => import('@/views/players/CreatePlayerView.vue'),
+              component: () => import('@/views/teams/players/CreatePlayerView.vue'),
               props: true,
               meta: {
                 breadcrumbs: [
@@ -112,13 +110,29 @@ const router = createRouter({
             {
               path: 'team/:name/edit-player',
               name: 'EditarJugador',
-              component: () => import('@/views/players/EditPlayerView.vue'),
+              component: () => import('@/views/teams/players/EditPlayerView.vue'),
               props: true,
               meta: {
                 breadcrumbs: [
                   { label: 'Equipos', to: '/teams' },
                   { label: (route: RouteLocationNormalizedLoaded) => route.params.name as string },
                   { label: 'Editar Jugador' },
+                ]
+              }
+            },
+          ]
+        },
+        {
+          path: 'calendar',
+          component: () => import('@/views/calendar/CalendarLayout.vue'),
+          children: [
+            {
+              path: '',
+              name: 'Calendario',
+              component: () => import('@/views/calendar/CalendarList.vue'),
+              meta: {
+                breadcrumbs: [
+                  { label: 'Calendario' },
                 ]
               }
             },

@@ -14,13 +14,14 @@ export interface DataTableColumn {
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 const props = withDefaults(defineProps<{
-  data: T[]
+  data?: T[]
   columns: DataTableColumn[]
   searchPlaceholder?: string
-  searchFields?: string[]     // campos del objeto donde se busca
+  searchFields?: string[]
   emptyMessage?: string
-  itemLabel?: string          // "jugadores", "equipos", etc.
+  itemLabel?: string
 }>(), {
+  data: () => [],
   searchPlaceholder: 'Buscar...',
   searchFields: () => [],
   emptyMessage: 'No se encontraron registros.',
@@ -64,6 +65,8 @@ function toggleSort(col: DataTableColumn) {
 // ─── Computed data ────────────────────────────────────────────────────────────
 
 const processedData = computed<T[]>(() => {
+  const source = props.data ?? []
+
   const q = searchQuery.value.toLowerCase().trim()
 
   const fields = props.searchFields.length
@@ -71,10 +74,10 @@ const processedData = computed<T[]>(() => {
     : props.columns.map(c => c.key)
 
   const list: T[] = q
-    ? props.data.filter(item =>
+    ? source.filter(item =>
         fields.some(f => String(item[f] ?? '').toLowerCase().includes(q))
       )
-    : [...props.data]
+    : [...source]
 
   if (sortKey.value) {
     const col = props.columns.find(c => c.key === sortKey.value)

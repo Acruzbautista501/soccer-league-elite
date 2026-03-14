@@ -21,11 +21,11 @@ const nav: NavItem[] = [
         to: '/teams',
         icon: 'fa-solid fa-users'
       },
-      // {
-      //   name: 'Partidos',
-      //   to: '/matches',
-      //   icon: 'fa-solid fa-futbol'
-      // },
+      {
+        name: 'Calendario',
+        to: '/calendar',
+        icon: 'fa-solid fa-calendar-days'
+      },
       // {
       //   name: 'Estadísticas',
       //   to: '/stats',

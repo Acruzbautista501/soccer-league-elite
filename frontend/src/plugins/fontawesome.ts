@@ -34,6 +34,9 @@ import {
   faCloudArrowUp,
   faPencil,
   faTrashCan,
+  faFilePen,
+  faCalendarPlus,
+  faEllipsis,
 } from '@fortawesome/free-solid-svg-icons'
 
 /* Agrégalos a la librería */
@@ -70,4 +73,7 @@ library.add(
   faCloudArrowUp,
   faPencil,
   faTrashCan,
+  faFilePen,
+  faCalendarPlus,
+  faEllipsis,
 )
