@@ -5,13 +5,14 @@ import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useRoute, useRouter } from 'vue-router'
 import { usePlayer } from '@/composables/usePalyer'
-import { getImageUrl } from '@/utils/getImage'
+import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue'
+import { getImagePlayerUrl, formatDateForInput } from '@/utils/getImage'
 
 const router = useRouter()
 const route = useRoute()
 
-const teamName = route.params.name as string
-const teamId = route.query.id as string
+const teamId = route.query.teamId as string
+const playerId = route.query.id as string
 
 const teamNamePlayer = computed(() => {
   if (typeof player.value.team === 'string') return ''
@@ -20,6 +21,7 @@ const teamNamePlayer = computed(() => {
 console.log(teamId)
 
 const { player, updatePlayerForm, getPlayer, updatePlayer, } = usePlayer()
+
 
 const logoFile = ref<File | null>(null)
 const preview = ref<string | null>(null)
@@ -141,7 +143,7 @@ const [city] = defineField('city')
 const [height] = defineField('height')
 const [weight] = defineField('weight')
 // Agregar nuevo equipo
-const updatePlayers = handleSubmit(async (values) => {
+const updateInfoPlayer = handleSubmit(async (values) => {
 
   updatePlayerForm.fullName = values.fullName
   updatePlayerForm.age = values.age
@@ -150,7 +152,6 @@ const updatePlayers = handleSubmit(async (values) => {
   updatePlayerForm.position = values.position
   updatePlayerForm.isStarter = values.isStarter
   updatePlayerForm.status = values.status
-  updatePlayerForm.team = teamId
   updatePlayerForm.city = values.city
   updatePlayerForm.height = values.height
   updatePlayerForm.weight = values.weight
@@ -159,12 +160,12 @@ const updatePlayers = handleSubmit(async (values) => {
 })
 
 onMounted(async () => {
-  await getPlayer(teamId)
+  await getPlayer(playerId)
 
   setValues({
     fullName: player.value.fullName,
     age: player.value.age,
-    birthDate: player.value.birthDate,
+    birthDate: formatDateForInput(player.value.birthDate),
     number: player.value.number,
     position: player.value.position,
     isStarter: player.value.isStarter,
@@ -175,9 +176,10 @@ onMounted(async () => {
   })
 
   updatePlayerForm._id = player.value._id
+  updatePlayerForm.team = teamId
 
   if (player.value.photo) {
-    preview.value = getImageUrl(player.value.photo)
+    preview.value = getImagePlayerUrl(player.value.photo)
   }
 })
 </script>
@@ -185,6 +187,7 @@ onMounted(async () => {
 <template>
   <div class="flex-1 p-6 md:p-10">
     <div class="w-full mx-auto flex flex-col gap-8">
+      <AppBreadcrumb />
       <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 class="text-slate-900 dark:text-slate-100 text-3xl font-black tracking-tight">Editar Jugador</h1>
@@ -204,7 +207,7 @@ onMounted(async () => {
             class="px-8 py-3 text-sm font-bold text-white bg-blue-800 hover:bg-blue-800/90 rounded shadow-lg shadow-primary/20 transition-all flex items-center gap-2"
           >
             <FaIcon icon="fa-pen-to-square" class="text-white text-lg"/>
-            Añadir Jugador
+            Editar Jugador
           </button>
         </div>       
         <!-- <div class="flex gap-4">
@@ -224,7 +227,7 @@ onMounted(async () => {
           </div>
         </div> -->
       </section>
-      <form id="edit-player" class="grid grid-cols-1 lg:grid-cols-3 gap-8" @submit.prevent="addNewPlayer">
+      <form id="edit-player" class="grid grid-cols-1 lg:grid-cols-3 gap-8" @submit.prevent="updateInfoPlayer">
         <!-- Photo Upload Section -->
         <div class="lg:col-span-1">
           <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
@@ -476,7 +479,7 @@ onMounted(async () => {
             </div>
             <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
               <p class="text-xs text-slate-500 italic">
-                Al registrar a este jugador, confirmas que cumple con todos los
+                Al editar a este jugador, confirmas que cumple con todos los
                 requisitos de elegibilidad de la liga y ha firmado las exenciones
                 médicas necesarias.
               </p>

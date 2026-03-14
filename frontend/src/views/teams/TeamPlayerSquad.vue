@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import { getImageUrl } from '@/utils/getImage'
+import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue'
+import { getImageTeamUrl } from '@/utils/getImage'
 import { useTeam } from '@/composables/useTeam';
 import { computed, onMounted } from 'vue';
 import GoalKeeperTable from '@/components/teams/GoalKeeperTable.vue';
@@ -13,6 +14,7 @@ const route = useRoute()
 const router = useRouter()
 
 const { team, teamPlayer, getPlayersTeam} = useTeam()
+
 
 const teamId = route.params.id as string
 
@@ -49,6 +51,9 @@ const openEditSquadPlayer = (team: Team) => {
     name: 'EditarPlantilla',
     params: {
       id: team._id
+    },
+    query:{
+      name: team.name
     }
   })
 }
@@ -61,6 +66,7 @@ onMounted( async () => {
 <template>
   <div class="flex-1 p-3 sm:p-5 md:p-10">
     <div class="w-full mx-auto flex flex-col gap-8">
+      <AppBreadcrumb />
       <section
         class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6"
       >
@@ -69,7 +75,7 @@ onMounted( async () => {
             <img
               alt="Escudo Equipo"
               class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain"
-              :src="getImageUrl(team.logoUrl)"
+              :src="getImageTeamUrl(team.logoUrl)"
             />
           </div>
 

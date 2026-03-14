@@ -5,10 +5,12 @@ import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useTeam } from '@/composables/useTeam'
 import { useRouter } from 'vue-router'
+import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue'
 
 const router = useRouter()
 
 const { createTeamForm, addTeam, } = useTeam()
+
 
 const logoFile = ref<File | null>(null)
 const preview = ref<string | null>(null)
@@ -99,6 +101,7 @@ const addNewTeam = handleSubmit(async (values) => {
 <template>
   <div class="flex-1 p-6 md:p-10">
     <div class="w-full mx-auto flex flex-col gap-8">
+      <AppBreadcrumb />
       <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 class="text-slate-900 dark:text-slate-100 text-3xl font-black tracking-tight">Registrar Nuevo Equipo</h1>

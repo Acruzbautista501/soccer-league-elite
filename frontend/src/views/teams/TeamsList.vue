@@ -7,8 +7,10 @@ import AddTeamCard from '@/components/teams/AddTeamCard.vue'
 
 import { useTeam } from '@/composables/useTeam'
 import type { Team } from '@/interfaces/Team'
+import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue'
 
 const { teams, getTeams } = useTeam()
+
 
 const MAX_TEAMS_PER_REGION = 16
 
@@ -74,6 +76,7 @@ const openSquadTeam = (team: Team) => {
 <template>
   <div class="flex-1 p-6 md:p-10">
     <div class="w-full mx-auto flex flex-col gap-8">
+      <AppBreadcrumb />
       <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 class="text-slate-900 dark:text-slate-100 text-3xl font-black tracking-tight">Gestión de Equipos</h1>

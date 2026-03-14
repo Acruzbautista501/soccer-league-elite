@@ -1,6 +1,14 @@
-export const getImageUrl = (path?: string) => {
+export const getImageTeamUrl = (path?: string) => {
   if (!path) {
-    return "/images/default-team.png"
+    return "/img/default-team.jpg"
+  }
+
+  return `${import.meta.env.VITE_ASSETS_URL}${path}`
+}
+
+export const getImagePlayerUrl = (path?: string) => {
+  if (!path) {
+    return "/img/default-player.jpg"
   }
 
   return `${import.meta.env.VITE_ASSETS_URL}${path}`
@@ -27,4 +35,8 @@ export function objectToFormData(
   }
 
   return formData
+}
+
+export function formatDateForInput(date: string) {
+  return date.split('T')[0]
 }

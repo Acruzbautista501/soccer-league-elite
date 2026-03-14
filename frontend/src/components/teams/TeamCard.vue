@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Team } from '@/interfaces/Team'
-import { getImageUrl } from '@/utils/getImage'
+import { getImageTeamUrl } from '@/utils/getImage'
 
 const props = defineProps<{
   team: Team
@@ -29,11 +29,13 @@ const handleEdit = () => emit('edit', props.team)
       >
         <img
           v-if="team.logoUrl"
-          :src="getImageUrl(team.logoUrl)"
+          :src="getImageTeamUrl(team.logoUrl)"
           alt="Escudo"
           class="w-full h-full object-contain"
         />
-        <span v-else class="text-xs text-slate-400">Sin logo</span>
+        <img 
+          v-else
+         :src="getImageTeamUrl(team.logoUrl)" />
       </div>
 
       <!-- Estado -->

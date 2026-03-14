@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Player, Team } from '@/interfaces/Team'
 import PlayersTable from './PlayersTable.vue';
-import { getImageUrl } from '@/utils/getImage';
+import { getImagePlayerUrl } from '@/utils/getImage';
 import { useRouter } from 'vue-router';
 
 
@@ -54,7 +54,7 @@ const openAddPlayer = (team: Team) => {
         <div class="flex items-center gap-3">
           <img
             class="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
-            :src="getImageUrl(midFielder.photo)"
+            :src="getImagePlayerUrl(midFielder.photo)"
             :alt="midFielder.fullName"
           />
           <div>

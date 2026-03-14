@@ -5,12 +5,14 @@ import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useTeam } from '@/composables/useTeam'
 import { useRoute, useRouter } from 'vue-router'
-import { getImageUrl } from '@/utils/getImage'
+import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue'
+import { getImageTeamUrl } from '@/utils/getImage'
 
 const route = useRoute()
 const router = useRouter()
 
 const { team,updateTeamForm, getTeam, updateTeam, deleteTeam } = useTeam()
+
 
 const teamId = route.params.id as string
 
@@ -116,7 +118,7 @@ onMounted(async () => {
 
   // Cargar escudo existente
   if (team.value.logoUrl) {
-    preview.value = getImageUrl(team.value.logoUrl)
+    preview.value = getImageTeamUrl(team.value.logoUrl)
   }
 })
 </script>
@@ -124,6 +126,7 @@ onMounted(async () => {
 <template>
   <div class="flex-1 p-6 md:p-10">
     <div class="w-full mx-auto flex flex-col gap-8">
+      <AppBreadcrumb />
       <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 class="text-slate-900 dark:text-slate-100 text-3xl font-black tracking-tight">Editar Equipo</h1>

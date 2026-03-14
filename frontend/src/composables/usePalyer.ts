@@ -4,12 +4,12 @@ import { useThemedSwal } from "./useThemedSwal";
 import type { CreatePlayer, Player, UpdatePlayer } from "@/interfaces/Player";
 import PlayerServices from "@/services/PlayerServices";
 import { objectToFormData } from "@/utils/getImage";
-import type { UpdateTeam } from "@/interfaces/Team";
+import { useTeam } from "./useTeam";
 
 export const usePlayer = () => {
   const router = useRouter()
   const { fire } = useThemedSwal()
-
+  const { getPlayersTeam } = useTeam()
 
   const playerService = PlayerServices
 
@@ -57,7 +57,6 @@ export const usePlayer = () => {
     city: "",
     height: 0,
     weight: 0,
-    photo: ""
   })
 
   // Obtener los equipos de la liga
@@ -103,9 +102,13 @@ export const usePlayer = () => {
         icon: 'success'
       })
       router.push({
-        name: 'PlantillaEquipo'
+        name: 'PlantillaEquipo',
+        params: {
+          id: typeof createPlayerForm.team === 'string'
+            ? createPlayerForm.team
+            : createPlayerForm.team._id
+        }
       })
-
     } catch (error: any) {
       await fire({
         title: 'Error',
@@ -126,15 +129,18 @@ export const usePlayer = () => {
       const { data } = await playerService.updatePlayer(updatePlayerForm._id, formData)
 
       await fire({
-        title: 'Equipo actualizado',
+        title: 'Jugador actualizado',
         text: data.message || 'La información del equipo se actualizó correctamente.',
         icon: 'success'
       })
 
-      // await getTeams()
-
       router.push({
-        name: 'PlantillaEquipo'
+        name: 'EditarPlantilla',
+        params: {
+          id: typeof updatePlayerForm.team === 'string'
+            ? updatePlayerForm.team
+            : updatePlayerForm.team._id
+        }
       })
 
     } catch (error: any) {
@@ -146,7 +152,7 @@ export const usePlayer = () => {
     }
   } 
 
-  // const deleteTeam = async (id: string) => {
+  // const deletePlayer = async (id: string) => {
   //   const confirm = await fire ({
   //     title: '¿Eliminar Equipo?',
   //     text: 'Da click en "Eliminar" si estás seguro de eliminar el equipo.',

@@ -1,7 +1,7 @@
 export interface CreatePlayer {
   fullName: string
   age: number
-  photo: string
+  photo?: string
   number: number
   birthDate: string
   position: 'Portero' | 'Defensa' | 'Mediocampista' | 'Delantero'
