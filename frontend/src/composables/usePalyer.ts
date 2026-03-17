@@ -4,12 +4,12 @@ import { useThemedSwal } from "./useThemedSwal";
 import type { CreatePlayer, Player, UpdatePlayer } from "@/interfaces/Player";
 import PlayerServices from "@/services/PlayerServices";
 import { objectToFormData } from "@/utils/getImage";
-import { useTeam } from "./useTeam";
+import { useTeam,  } from "./useTeam";
 
 export const usePlayer = () => {
   const router = useRouter()
   const { fire } = useThemedSwal()
-  const { getPlayersTeam } = useTeam()
+  const { teamPlayer } = useTeam()
 
   const playerService = PlayerServices
 
@@ -152,50 +152,12 @@ export const usePlayer = () => {
     }
   } 
 
-  // const deletePlayer = async (id: string) => {
-  //   const confirm = await fire ({
-  //     title: '¿Eliminar Equipo?',
-  //     text: 'Da click en "Eliminar" si estás seguro de eliminar el equipo.',
-  //     icon: 'question',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Eliminar',
-  //     cancelButtonText: 'Cancelar'
-  //   })
-  //   if(!confirm.isConfirmed) return
-
-  //   try {
-  //     const { data } = await teamService.deleteTeam(id)
-  //     fire({
-  //       title: 'Eliminado',
-  //       text: data.message || 'El equipo ha sido eliminado correctamente.',
-  //       icon: 'success'
-  //     })
-  //     await getTeams()
-  //     router.push({
-  //       name: 'Equipos'
-  //     })
-
-  //   } catch (error: any) {
-  //     fire({
-  //       title:'Error',
-  //       text: error.response?.data?.message || 'No se pudo eliminar el equipo.',
-  //       icon: 'error'
-  //     })      
-  //   }
-  // }
-
   return{
     player,
-    // teamPlayer,
     createPlayerForm,
     updatePlayerForm,
-    // updateTeamForm,
-
-    // getTeams,
     getPlayer,
     addPlayer,
-    // getTeam,
     updatePlayer,
-    // deleteTeam
   }
 }

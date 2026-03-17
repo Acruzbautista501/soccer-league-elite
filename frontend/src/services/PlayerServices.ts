@@ -11,5 +11,8 @@ export default {
   },
   updatePlayer(id: string, payload: FormData) {
     return api.put<ApiResponse<Player>>(`/players/player/update/${id}`, payload)
+  },
+  deletePlayer(id: string){
+    return api.delete(`/players/delete/${id}`);
   }
 }

@@ -1,5 +1,6 @@
 import type { Team, CreateTeam, UpdateTeam, TeamPlayersResponse, Player } from "@/interfaces/Team";
 import TeamsServices from "@/services/TeamsServices";
+import PlayerServices from "@/services/PlayerServices"
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useThemedSwal } from "./useThemedSwal";
@@ -9,6 +10,7 @@ export const useTeam = () => {
   const { fire } = useThemedSwal()
 
   const teamService = TeamsServices
+  const playerService = PlayerServices
   const teams = ref<Team[]>([])
 
   const team = ref<Team>({
@@ -216,6 +218,34 @@ export const useTeam = () => {
     }
   }
 
+    const deletePlayer = async (id: string, teamId: string) => {
+    const confirm = await fire ({
+      title: '¿Eliminar Jugador?',
+      text: 'Da click en "Eliminar" si estás seguro de eliminar el jugador.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    })
+    if(!confirm.isConfirmed) return
+
+    try {
+      const { data } = await playerService.deletePlayer(id)
+      fire({
+        title: 'Eliminado',
+        text: data.message || 'El jugador ha sido eliminado correctamente.',
+        icon: 'success'
+      })
+      teamPlayer.value = teamPlayer.value.filter(player => player._id !== id)
+    } catch (error: any) {
+      fire({
+        title:'Error',
+        text: error.response?.data?.message || 'No se pudo eliminar el jugador.',
+        icon: 'error'
+      })      
+    }
+  }
+
   return{
     teams,
     team,
@@ -228,6 +258,7 @@ export const useTeam = () => {
     addTeam,
     getTeam,
     updateTeam,
-    deleteTeam
+    deleteTeam,
+    deletePlayer,
   }
 }

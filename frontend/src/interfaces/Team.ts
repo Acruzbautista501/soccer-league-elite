@@ -21,7 +21,7 @@ export interface UpdateTeam extends CreateTeam {
 } 
 
 export interface Player {
-  _id?: string
+  _id: string
   fullName: string
   age: number
   birthDate: string

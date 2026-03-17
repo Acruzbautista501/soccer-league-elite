@@ -112,7 +112,7 @@ const openSquadTeam = (team: Team) => {
                 : 'border-transparent text-slate-400 dark:text-slate-500',
             ]"
           >
-            Región Golfo ({{ gulfCount }}) equipos
+            Zona Golfo ({{ gulfCount }}) equipos
           </button>
           <button
             @click="activeTab = 'Norte'"
@@ -123,7 +123,7 @@ const openSquadTeam = (team: Team) => {
                 : 'border-transparent text-slate-400 dark:text-slate-500',
             ]"
           >
-            Región Norte ({{ northCount }}) equipos
+            Zona Norte ({{ northCount }}) equipos
           </button>
         </div>
         <Transition

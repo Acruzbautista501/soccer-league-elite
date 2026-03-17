@@ -457,9 +457,6 @@ const addNewPlayer = handleSubmit(async (values) => {
             </div>
 
           </div>
-        </div>
-      </form>
-
       <!-- Help Card -->
       <div
         class="mt-8 p-4 rounded-xl bg-blue-500/20 border border-blue-500/80 flex gap-4 items-start"
@@ -478,6 +475,8 @@ const addNewPlayer = handleSubmit(async (values) => {
           </p>
         </div>
       </div>
+        </div>
+      </form>
     </div>
   </div>
 </template>

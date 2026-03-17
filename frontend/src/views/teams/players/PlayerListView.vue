@@ -8,8 +8,7 @@ import type { DataTableColumn } from '@/components/ui/AppDataTable.vue'
 import { getImagePlayerUrl } from '@/utils/getImage'
 import type { Player, Team } from '@/interfaces/Team'
 
-const { team, teamPlayer, getPlayersTeam } = useTeam()
-
+const { team, teamPlayer, getPlayersTeam, deletePlayer } = useTeam()
 const router = useRouter()
 const route = useRoute()
 
@@ -127,7 +126,9 @@ const openEditPlayer = (player: Player) => {
                   >
                     <FaIcon icon="fa-pencil" />
                   </button>
-                  <button class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                  <button
+                    @click="deletePlayer(player._id, player.team)" 
+                    class="p-2 text-slate-400 hover:text-red-500 transition-colors">
                     <FaIcon icon="fa-trash-can" />
                   </button>
                 </div>
